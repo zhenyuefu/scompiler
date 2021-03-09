@@ -37,7 +37,7 @@ TODO
 
 Pour lancer les tests unitaires, aller dans le répertoire `test/`
 
-et invoquer `racket <fichier-de-test>.scm`  tout simplement.
+et invoquer `raco test <fichier-de-test>.scm`  tout simplement.
 N'hésitez pas à ajouter des fichiers de test, et compléter
 les fichiers existants.
 
