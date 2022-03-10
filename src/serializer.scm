@@ -5,7 +5,7 @@
 ;;;;;; 2021-
 ;;;;;; LU3IN018: Compilation
 ;;;;;;
-;;;;;; Copyright (C) F.P. under GPLv3.0  (cf. LICENSE) 
+;;;;;; Copyright (C) F.P. under GPLv3.0  (cf. LICENSE)
 
 #lang racket
 
@@ -26,24 +26,24 @@
 ;;; serialized-length : BC-instr -> Integer
 (define (serialized-length instr)
   (cond ((BC-PUSH? instr)
-	 (if (BC-unit? (BC-PUSH-value instr)) 2 3))
-	((BC-LABEL? instr) 0)
-	((or (BC-GALLOC? instr) (BC-POP? instr) (BC-RETURN? instr)) 1)
-	(else ; JUMP JFALSE GSTORE GFETCH CALL FETCH STORE 
-	 2)))
+         (if (BC-unit? (BC-PUSH-value instr)) 2 3))
+        ((BC-LABEL? instr) 0)
+        ((or (BC-GALLOC? instr) (BC-POP? instr) (BC-RETURN? instr)) 1)
+        (else ; JUMP JFALSE GSTORE GFETCH CALL FETCH STORE
+         2)))
 
 ;;; labels-index: LIST[BC-instr] -> ALIST[Symbol Integer]
 (define (labels-index instrs)
-  (letrec 
+  (letrec
       ((index
-	(lambda (instrs lnum)
-	  (if (pair? instrs)
-	      (let ((instr (car instrs)))
-		(if (BC-LABEL? instr)
-		    (cons (list (BC-LABEL-label instr) lnum)
-			  (index (cdr instrs) lnum))
-		    (index (cdr instrs) (+ lnum (serialized-length instr)))))
-	      (list)))))
+        (lambda (instrs lnum)
+          (if (pair? instrs)
+              (let ((instr (car instrs)))
+                (if (BC-LABEL? instr)
+                    (cons (list (BC-LABEL-label instr) lnum)
+                          (index (cdr instrs) lnum))
+                    (index (cdr instrs) (+ lnum (serialized-length instr)))))
+              (list)))))
     (index instrs 0)))
 
 ;;; get-label-index: Symbol * ALIST[Symbol Integer] -> Integer
@@ -61,10 +61,10 @@
 ;;; serialize-constant: BCValue -> Integer
 (define (serialize-constant v labels)
   (cond ((BC-bool? v)
-	 (if (BC-bool-val v) 1 0))
-	((BC-fun? v)
-	 (get-label-index (BC-fun-label v) labels))
-	(else (cadr v))))
+         (if (BC-bool-val v) 1 0))
+        ((BC-fun? v)
+         (get-label-index (BC-fun-label v) labels))
+        (else (cadr v))))
 
 ;;; serialize-value: BCValue * LIST[Symbol] -> LIST[Int]
 (define (serialize-value v labels)
@@ -100,7 +100,7 @@
       (append (serialize-instr (car instrs) labels)
               (serialize-instrs (cdr instrs) labels))
       (list)))
-  
+
 ;;; serialize: LIST[BC-instr] -> LIST[Int]
 (define (serialize-bytecode bc)
   (let ((labels (labels-index bc)))

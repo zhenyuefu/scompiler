@@ -5,7 +5,7 @@
 ;;;;;; 2021-
 ;;;;;; LU3IN018: Compilation
 ;;;;;;
-;;;;;; Copyright (C) F.P. under GPLv3.0  (cf. LICENSE) 
+;;;;;; Copyright (C) F.P. under GPLv3.0  (cf. LICENSE)
 
 #lang racket
 
@@ -14,7 +14,7 @@
 
 ;;;;;
 ;;;;; Le langage noyau: type KExpr, sous ensemble de SExpr
-;;;;; 
+;;;;;
 ;  <KExpr> ::= <symbol>
 ;           |  <atom>                          // valeurs immédiates
 ;           |  ( define <symbol> <KExpr> )
@@ -85,6 +85,19 @@
 (define (set!-expr expr)
   (caddr expr))
 
+;;;; Affectation: 'mset!
+;;; mset!-expr?: KExpr -> bool
+(define (mset!-expr? x)
+  (eq? (car x) 'mset!))
+
+;;; mset!-sym: KExpr -> <symbol>*
+(define (mset!-sym expr)
+  (cadr expr))
+
+;;; mset!-expr: KExpr -> <KExpr>*
+(define (mset!-expr expr)
+  (caddr expr))
+
 ;;;; Séquence: 'begin
 ;;; begin-expr?: KExpr -> bool
 (define (begin-expr? x)
@@ -107,4 +120,15 @@
 (define (lambda-body expr)
   (cddr expr))
 
+;;;; Alternative: 'while
+;;; while-expr?: KExpr -> bool
+(define (while-expr? expr)
+  (eq? (car expr) 'while))
 
+;;; while-cond: KExpr -> KExpr
+(define (while-cond expr)
+  (cadr expr))
+
+;;; while-body: KExpr -> KExpr
+(define (while-body expr)
+  (caddr expr))
