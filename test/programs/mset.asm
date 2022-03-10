@@ -1,0 +1,19 @@
+;;; assembly compiled from file: test/programs/mset.scm
+ GALLOC
+ PUSH INT 0
+ GSTORE 1
+ PUSH UNIT
+ POP
+ PUSH INT 0
+ JUMP L1
+L0:
+ PUSH INT 7
+ PUSH INT 3
+ GSTORE 1
+ STORE 0
+ PUSH UNIT
+ RETURN
+L1:
+ PUSH FUN L0
+ CALL 1
+ POP

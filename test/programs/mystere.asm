@@ -1,0 +1,32 @@
+;;; assembly compiled from file: test/programs/mystere.scm
+ GALLOC
+ JUMP L1
+L0:
+ PUSH INT 0
+ FETCH 0
+ PUSH PRIM 4
+ CALL 2
+ JFALSE L2
+ PUSH INT 1
+ JUMP L3
+L2:
+ PUSH INT 1
+ FETCH 0
+ PUSH PRIM 1
+ CALL 2
+ GFETCH 1
+ CALL 1
+ FETCH 0
+ PUSH PRIM 2
+ CALL 2
+L3:
+ RETURN
+L1:
+ PUSH FUN L0
+ GSTORE 1
+ PUSH UNIT
+ POP
+ PUSH INT 3
+ GFETCH 1
+ CALL 1
+ POP

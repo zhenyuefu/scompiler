@@ -1,0 +1,27 @@
+;;; assembly compiled from file: test/programs/lamda.scm
+ JUMP L1
+L0:
+ FETCH 1
+ PUSH PRIM 0
+ FETCH 0
+ PUSH PRIM 0
+ CALL 3
+ RETURN
+L1:
+ PUSH FUN L0
+ POP
+ JUMP L3
+L2:
+ JUMP L5
+L4:
+ FETCH 0
+ FETCH 1
+ PUSH PRIM 0
+ CALL 2
+ RETURN
+L5:
+ PUSH FUN L4
+ RETURN
+L3:
+ PUSH FUN L2
+ POP

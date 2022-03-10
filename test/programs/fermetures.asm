@@ -1,0 +1,31 @@
+;;; assembly compiled from file: test/programs/fermetures.scm
+ GALLOC
+ PUSH INT 3
+ GSTORE 1
+ PUSH UNIT
+ POP
+ GALLOC
+ JUMP L1
+L0:
+ GFETCH 1
+ FETCH 0
+ PUSH PRIM 0
+ CALL 2
+ RETURN
+L1:
+ PUSH FUN L0
+ GSTORE 2
+ PUSH UNIT
+ POP
+ PUSH INT 2
+ GFETCH 2
+ CALL 1
+ POP
+ PUSH INT 4
+ GSTORE 1
+ PUSH UNIT
+ POP
+ PUSH INT 2
+ GFETCH 2
+ CALL 1
+ POP

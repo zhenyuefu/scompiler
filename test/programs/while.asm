@@ -1,0 +1,24 @@
+;;; assembly compiled from file: test/programs/while.scm
+ GALLOC
+ PUSH INT 0
+ GSTORE 1
+ PUSH UNIT
+ POP
+L0:
+ PUSH INT 0
+ GFETCH 1
+ PUSH PRIM 4
+ CALL 2
+ JFALSE L1
+ PUSH INT 1
+ GFETCH 1
+ PUSH PRIM 0
+ CALL 2
+ GSTORE 1
+ PUSH UNIT
+ POP
+ JUMP L0
+L1:
+ POP
+ GFETCH 1
+ POP
