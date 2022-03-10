@@ -378,12 +378,6 @@
           (compile-expr prims genv env (n-aires-function expr))
           (list (BC-CALL 1))))
 
-;;; build-args :
-(define (build-args expr)
-  (if (pair? expr)
-      (reverse (list 'cons(list 'quote (car expr)) (build-args (cdr expr)) ) )
-      (quote (list))))
-
 ;;;;;
 ;;;;; Fonction principale
 ;;;;;
