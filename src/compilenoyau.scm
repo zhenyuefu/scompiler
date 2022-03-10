@@ -172,6 +172,8 @@
         ((lambda-expr? expr) (compile-lambda prims genv env expr))
         ((while-expr? expr) (compile-while prims genv env expr))
         ((mset!-expr? expr) (compile-mset! prims genv env expr))
+        ((lambda$-expr? expr) (compile-lambda$ prims genv env expr))
+        ((n-aires? expr) (compile-apply$ prims genv env expr))
         (else (compile-apply prims genv env expr))))
 
 ;;;; Symboles
@@ -326,6 +328,20 @@
             (list (BC-LABEL clbl))
             (list (BC-PUSH (BC-fun flbl))))))
 
+
+;;; n-aire :
+;;; compile-lambda$ :
+(define (compile-lambda$ prims genv env expr)
+  (let ((flbl (next-label!)) ;; function label
+        (clbl (next-label!)) ;; continuation label
+        (nenv (append (lambda$-params expr) env)))
+    (append (list (BC-JUMP clbl))
+            (list (BC-LABEL flbl))
+            (compile-seq prims genv nenv (lambda$-body expr))
+            (list (BC-RETURN))
+            (list (BC-LABEL clbl))
+            (list (BC-PUSH (BC-fun flbl))))))
+
 ;;;; While
 ;;; compile-while : PrimEnv * GlobEnv * LexEnv * KExpr -> LIST[BCInstr]
 (define (compile-while prims genv env expr)
@@ -356,6 +372,17 @@
               (compile-args prims genv env (cdr args)))
       (list)))
 
+;;; compile-apply$ :
+(define (compile-apply$ prims genv env expr)
+  (append (compile-expr prims genv env (construct (n-aires-args expr)))
+          (compile-expr prims genv env (n-aires-function expr))
+          (list (BC-CALL 1))))
+
+;;; build-args :
+(define (build-args expr)
+  (if (pair? expr)
+      (reverse (list 'cons(list 'quote (car expr)) (build-args (cdr expr)) ) )
+      (quote (list))))
 
 ;;;;;
 ;;;;; Fonction principale

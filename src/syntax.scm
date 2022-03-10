@@ -132,3 +132,28 @@
 ;;; while-body: KExpr -> KExpr
 (define (while-body expr)
   (caddr expr))
+
+;;;; Lambdas n-aires
+;;; n-aires? KExpr -> bool
+(define (n-aires? expr)
+  (eq? (car expr) '$))
+
+;;; n-aires-function: KExpr -> KExpr
+(define (n-aires-function expr)
+  (cadr expr))
+
+;;; n-aires-args: KExpr -> LIST[KExpr]
+(define (n-aires-args expr)
+  (cddr expr))
+
+;;; lambda$?: KExpr -> bool
+(define (lambda$-expr? expr)
+  (eq? (car expr) 'lambda$))
+
+;;; lambda$-params: KExpr -> Symbol*
+(define (lambda$-params expr)
+  (list (cadr expr)))
+
+;;; lambda$-body: KExpr -> KExpr
+(define (lambda$-body expr)
+  (cddr expr))
