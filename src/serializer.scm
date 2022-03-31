@@ -28,7 +28,7 @@
   (cond ((BC-PUSH? instr)
          (if (BC-unit? (BC-PUSH-value instr)) 2 3))
         ((BC-LABEL? instr) 0)
-        ((or (BC-GALLOC? instr) (BC-POP? instr) (BC-RETURN? instr)) 1)
+        ((or (BC-GALLOC? instr) (BC-POP? instr) (BC-RETURN? instr) (BC-ERROR? instr)) 1)
         (else ; JUMP JFALSE GSTORE GFETCH CALL FETCH STORE
          2)))
 
@@ -84,6 +84,7 @@
               (cond ((BC-GALLOC? instr) (list))
                     ((BC-RETURN? instr) (list))
                     ((BC-POP? instr) (list))
+                    ((BC-ERROR? instr) (list))
                     ((BC-PUSH? instr)  (serialize-value (BC-PUSH-value instr) labels))
                     ((BC-GSTORE? instr) (list (BC-GSTORE-ref instr)))
                     ((BC-JUMP? instr)   (list (get-label-index (BC-JUMP-label instr) labels)))

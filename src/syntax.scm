@@ -157,3 +157,13 @@
 ;;; lambda$-body: KExpr -> KExpr
 (define (lambda$-body expr)
   (cddr expr))
+
+
+;;;; Error
+;;; error-expr? KExpr -> bool
+(define (error-expr? expr)
+  (eq? (car expr) 'error))
+
+;;; error-message: KExpr -> KExpr
+(define (error-message expr)
+  (cadr expr))

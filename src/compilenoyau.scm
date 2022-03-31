@@ -174,6 +174,7 @@
         ((mset!-expr? expr) (compile-mset! prims genv env expr))
         ((lambda$-expr? expr) (compile-lambda$ prims genv env expr))
         ((n-aires? expr) (compile-apply$ prims genv env expr))
+        ((error-expr? expr) (compile-error prims genv env expr))
         (else (compile-apply prims genv env expr))))
 
 ;;;; Symboles
@@ -354,6 +355,17 @@
             (list (BC-POP))
             (list (BC-JUMP beginwhile))
             (list (BC-LABEL endwhile)))))
+
+
+;;;; Error
+;;; compile-error :
+;;;   PrimEnv * GlobEnv * LexEnv * KExpr -> LIST[BCInstr]
+(define (compile-error prims genv env expr)
+  (if (integer? (error-message expr))
+      (append (compile-expr prims genv env (error-message expr))
+              (list (BC-ERROR))
+              (list (BC-PUSH (BC-unit))))
+      (emit-error "Cannot compile: error message is not an integer")))
 
 
 ;;;; Application

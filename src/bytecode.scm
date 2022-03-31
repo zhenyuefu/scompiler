@@ -5,7 +5,7 @@
 ;;;;;; 2021-
 ;;;;;; LU3IN018: Compilation
 ;;;;;;
-;;;;;; Copyright (C) F.P. under GPLv3.0  (cf. LICENSE) 
+;;;;;; Copyright (C) F.P. under GPLv3.0  (cf. LICENSE)
 
 #lang racket
 
@@ -32,16 +32,17 @@
                    (RETURN 7)
                    (FETCH 8)
                    (JFALSE 9)
-                   (STORE 10)))
+                   (STORE 10)
+                   (ERROR 11)))
 
 
-;;;;; Codage des valeurs 
+;;;;; Codage des valeurs
 ; type BCValue
 ; ('INT <num>) valeur numérique
 ; ('BOOL <bool>) valeur booléenne
 ; ('UNIT) non valeur
 ; ('FUN <symbol>) valeur fonctionnelle (étiquette du code)
-; ('PRIM <num>) primitives (son numéro) 
+; ('PRIM <num>) primitives (son numéro)
 
 ;;;; Constructeurs
 ;;; BC-int : Int -> BCValue
@@ -104,44 +105,44 @@
 
 ;;;;; JEU D'INSTRUCTIONS
 ; type BCInstr
-;; (NOOP)  
+;; (NOOP)
 ;  instruction sans effet (Non Operation).
-;; (PUSH <val>)   
+;; (PUSH <val>)
 ;  place au sommet de la pile la valeur <val>.
-;; (POP) 
+;; (POP)
 ;  retire l'élément au sommet de la pile.
-;; (GALLOC)   
+;; (GALLOC)
 ;  alloue une place nouvelle place dans l'environnement global.
-;; (GSTORE <ref>)   
-;  dépile la valeur en sommet de la pile et l'enregistre dans 
-;  l'environnement global à la position <ref> (entier positif 
+;; (GSTORE <ref>)
+;  dépile la valeur en sommet de la pile et l'enregistre dans
+;  l'environnement global à la position <ref> (entier positif
 ;  ou nul).
-;; (GFETCH <ref>)   
-;  empile la valeur de l'environnement global à la position <ref> 
+;; (GFETCH <ref>)
+;  empile la valeur de l'environnement global à la position <ref>
 ;  (entier positif ou nul).
-;; (STORE <ref>)   
-;  dépile la valeur en sommet de la pile pour la placer à la 
+;; (STORE <ref>)
+;  dépile la valeur en sommet de la pile pour la placer à la
 ;  position <ref> (entier positif ou nul).
-;; (FETCH <ref>) 
-;  empile une copie de la valeur de la pile située à la position 
+;; (FETCH <ref>)
+;  empile une copie de la valeur de la pile située à la position
 ;  <ref> (entier positif ou nul) dans l'environnement lexical.
-;; (CALL <nb>)  
+;; (CALL <nb>)
 ;  appelle la procédure (fonction/primitive) en sommet de pile;
 ;  avec <nb> nombre d'arguments de la procédure appelée.
-;  Une fenêtre de pile est créée avec, notamment, l'adresse de 
-;  retour. Au retour de la procédure, la valeur calculée est 
+;  Une fenêtre de pile est créée avec, notamment, l'adresse de
+;  retour. Au retour de la procédure, la valeur calculée est
 ;  sur le sommet de la pile.
-;; (JUMP <label>)  
+;; (JUMP <label>)
 ;  effectue un saut non conditionnel à l'étiquette <label>.
-;; (JFALSE <label>) 
-;; effectue un saut conditionnel à l'étiquette <label> si 
-;  le sommet de pile est la valeur FALSE. Le sommet de pile 
+;; (JFALSE <label>)
+;; effectue un saut conditionnel à l'étiquette <label> si
+;  le sommet de pile est la valeur FALSE. Le sommet de pile
 ;  est consommé.
-;; (LABEL <label>) 
+;; (LABEL <label>)
 ;  déclare une position/étiquette de saut avec la référence <label>.
-;; (RETURN)  
-;  instruction de retour d'appel de procédure. L'adresse/étiquette 
-;  de retour et le nombre d'arguments pour le nettoyage sont sur 
+;; (RETURN)
+;  instruction de retour d'appel de procédure. L'adresse/étiquette
+;  de retour et le nombre d'arguments pour le nettoyage sont sur
 ;  la pile.
 
 ;;;; Constructeurs
@@ -197,6 +198,10 @@
 (define (BC-RETURN)
   (list 'RETURN))
 
+;;; BC-ERROR : Unit -> BCInstr
+(define (BC-ERROR)
+  (list 'ERROR))
+
 ;;;; Reconnaisseurs
 ;;; BC-sym? : Symbol * BCInstr -> Bool
 (define (BC-sym? sym instr)
@@ -212,7 +217,7 @@
 
 ;;; BC-POP? : BCInstr -> Bool
 (define (BC-POP? instr)
-  (BC-sym? 'POP instr))  
+  (BC-sym? 'POP instr))
 
 ;;; BC-GALLOC? : BCInstr -> Bool
 (define (BC-GALLOC? instr)
@@ -253,6 +258,10 @@
 ;;; BC-RETURN? : BCInstr -> Bool
 (define (BC-RETURN? instr)
   (BC-sym? 'RETURN instr))
+
+;;; BC-ERROR? : BCInstr -> Bool
+(define (BC-ERROR? instr)
+  (BC-sym? 'ERROR instr))
 
 ;;;; Accesseurs
 ;;; BC-PUSH-value : BCInstr -> BCValue
