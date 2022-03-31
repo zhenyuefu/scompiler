@@ -1,16 +1,16 @@
 ;;;;;;
 ;;;;;; SCompiler / Gestion des primitives
 ;;;;;;
-;;;;;; Sorbonne Université -- licence informatique 3ème année
+;;;;;; Sorbonne Universitï¿½ -- licence informatique 3ï¿½me annï¿½e
 ;;;;;; 2021-
 ;;;;;; LU3IN018: Compilation
 ;;;;;;
-;;;;;; Copyright (C) F.P. under GPLv3.0  (cf. LICENSE) 
+;;;;;; Copyright (C) F.P. under GPLv3.0  (cf. LICENSE)
 
 #lang racket
 
 (provide init-prims
-	 prims-fetch)
+         	 prims-fetch)
 
 ;;;; L'environnement des primitives est une simple liste
 ;;;; de symboles
@@ -22,19 +22,21 @@
 ;;; primitives connues.
 (define (init-prims)
   '((+ 0 ADD)
-    (- 1 SUB) 
+    (- 1 SUB)
     (* 2 MUL)
     (/ 3 DIV)
-    (= 4 EQ) 
-    (list 5 LIST) 
-    (cons 6 CONS) 
-    (car 7 CAR) 
+    (= 4 EQ)
+    (list 5 LIST)
+    (cons 6 CONS)
+    (car 7 CAR)
     (cdr 8 CDR)
     (zero? 9 ZEROP)
+    (display 10 DISPLAY)
+    (newline 11 NEWLINE)
     ))
 
 ;;; prims-fetch: PrimEnv * Symbol -> Int + #f
-;;; (prims-fetch penv var) retourne la référence de la primitive
+;;; (prims-fetch penv var) retourne la rÃ©fÃ©rence de la primitive
 ;;; var ou #f si la primitive n'est pas connue.
 (define (prims-fetch penv var)
   (if (pair? penv)
