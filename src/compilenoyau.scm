@@ -408,9 +408,16 @@
               (compile-args prims genv env (cdr args)))
       (list)))
 
+;;; build-args :
+;;;   PrimEnv * GlobEnv * LexEnv * LIST[KExpr] -> LIST[BCInstr]
+(define (build-args args)
+  (if (pair? args)
+      (append (list 'cons) (list (car args)) (list (build-args (cdr args))))
+      (list 'list)))
+
 ;;; compile-apply$ :
 (define (compile-apply$ prims genv env expr)
-  (append (compile-expr prims genv env (construct (n-aires-args expr)))
+  (append (compile-expr prims genv env (build-args (n-aires-args expr)))
           (compile-expr prims genv env (n-aires-function expr))
           (list (BC-CALL 1))))
 
