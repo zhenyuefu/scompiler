@@ -169,6 +169,7 @@
         ((set!-expr? expr) (compile-set! prims genv env expr))
         ((begin-expr? expr) (compile-begin prims genv env expr))
         ((define-expr? expr) (compile-define prims genv env expr))
+        ((let-expr? expr) (compile-let prims genv env expr))
         ((lambda-expr? expr) (compile-lambda prims genv env expr))
         ((while-expr? expr) (compile-while prims genv env expr))
         ((mset!-expr? expr) (compile-mset! prims genv env expr))
@@ -274,6 +275,29 @@
                   (store-vars genv env (cdr vars)))
           (store-var genv env (car vars)))
       (emit-error "Cannot compile: empty vars")))
+
+;;; gen-store-alloc:
+;;;   GlobEnv * LexEnv * LIST[Symbol] -> LIST[BCInstr]
+(define (gen-store-alloc prims genv env bindings)
+  (let ((len (length bindings))
+        (vars (reverse (let-var-list bindings)))
+        (newenv (append (let-var-list bindings) env))
+        (vals  (let-val-list bindings)))
+    (append (compile-args prims genv env vals)
+            (list (BC-ALLOC len))
+            (store-vars genv newenv vars)
+            )))
+
+;;; compile-let:
+;;;   PrimEnv * GlobEnv * LexEnv * KExpr -> LIST[BCInstr]
+(define (compile-let prims genv env expr)
+  (let* ((bindings (let-bindings expr))
+         (body (let-body expr))
+         (newenv (append (let-var-list bindings) env))
+         (len (length bindings)))
+    (append (gen-store-alloc prims genv env bindings)
+            (compile-seq prims genv newenv body)
+            (list (BC-DELETE len)))))
 
 ;;; compile-mset!:
 ;;;   PrimEnv * GlobEnv * LexEnv * KExpr -> LIST[BCInstr]

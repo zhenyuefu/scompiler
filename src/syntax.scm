@@ -120,6 +120,36 @@
 (define (lambda-body expr)
   (cddr expr))
 
+;;;; let
+;;; let-expr?: KExpr -> bool
+(define (let-expr? x)
+  (eq? (car x) 'let))
+
+;;; let-bindings: KExpr -> LIST[(Symbol, KExpr)]
+(define (let-bindings expr)
+  (cadr expr))
+
+;;; let-var-list: KExpr -> LIST[Symbol]
+(define (let-var-list bindings)
+  (map (lambda (x) (car x)) bindings))
+
+;;; let-val-list: KExpr -> LIST[KExpr]
+(define (let-val-list bindings)
+  (map (lambda (x) (cadr x)) bindings))
+
+;;; let-body: KExpr -> LIST[KExpr]
+(define (let-body expr)
+  (cddr expr))
+
+;;; binding-var: (Symbol, KExpr) -> Symbol
+(define (binding-var binding)
+  (car binding))
+
+;;; binding-val: (Symbol, KExpr) -> KExpr
+(define (binding-val binding)
+  (cdr binding))
+
+
 ;;;; Alternative: 'while
 ;;; while-expr?: KExpr -> bool
 (define (while-expr? expr)

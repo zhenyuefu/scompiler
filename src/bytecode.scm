@@ -33,7 +33,9 @@
                    (FETCH 8)
                    (JFALSE 9)
                    (STORE 10)
-                   (ERROR 11)))
+                   (ERROR 11)
+                   (ALLOC 12)
+                   (DELETE 13)))
 
 
 ;;;;; Codage des valeurs
@@ -202,6 +204,14 @@
 (define (BC-ERROR)
   (list 'ERROR))
 
+;;; BC-ALLOC : Int -> BCInstr
+(define (BC-ALLOC n)
+  (list 'ALLOC n))
+
+;;; BC-DELETE : Int -> BCInstr
+(define (BC-DELETE n)
+  (list 'DELETE n))
+
 ;;;; Reconnaisseurs
 ;;; BC-sym? : Symbol * BCInstr -> Bool
 (define (BC-sym? sym instr)
@@ -263,6 +273,14 @@
 (define (BC-ERROR? instr)
   (BC-sym? 'ERROR instr))
 
+;;; BC-ALLOC? : BCInstr -> Bool
+(define (BC-ALLOC? instr)
+  (BC-sym? 'ALLOC instr))
+
+;;; BC-DELETE? : BCInstr -> Bool
+(define (BC-DELETE? instr)
+  (BC-sym? 'DELETE instr))
+
 ;;;; Accesseurs
 ;;; BC-PUSH-value : BCInstr -> BCValue
 (define (BC-PUSH-value instr)
@@ -298,4 +316,12 @@
 
 ;;; BC-LABEL-label : BCInstr -> Symbol
 (define (BC-LABEL-label instr)
+  (cadr instr))
+
+;;; BC-ALLOC-ref : BCInstr -> Int
+(define (BC-ALLOC-ref instr)
+  (cadr instr))
+
+;;; BC-DELETE-ref : BCInstr -> Int
+(define (BC-DELETE-ref instr)
   (cadr instr))

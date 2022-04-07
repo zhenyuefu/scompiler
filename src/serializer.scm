@@ -93,6 +93,8 @@
                     ((BC-FETCH? instr)  (list (BC-FETCH-ref instr)))
                     ((BC-JFALSE? instr) (list (get-label-index (BC-JFALSE-label instr) labels)))
                     ((BC-STORE? instr)  (list (BC-STORE-ref instr)))
+                    ((BC-ALLOC? instr)  (list (BC-ALLOC-ref instr)))
+                    ((BC-DELETE? instr) (list (BC-DELETE-ref instr)))
                     (else (emit-error "can't serialize: " instr)))))))
 
 ;;; serialize-instrs: LIST[BC-instr] * labels -> LIST[Int]
