@@ -5,7 +5,7 @@
 ;;;;;; 2021-
 ;;;;;; LU3IN018: Compilation
 ;;;;;;
-;;;;;; Copyright (C) F.P. under GPLv3.0  (cf. LICENSE) 
+;;;;;; Copyright (C) F.P. under GPLv3.0  (cf. LICENSE)
 
 ;;; on utilise le sous-ensemble Scheme du langage racket
 #lang racket
@@ -21,7 +21,8 @@
          base-path
          dir-path
          reroot-path
-         append-all)
+         append-all
+         str)
 
 ;;; emit-error: SExpr * ... -> Unit
 ;;; (emit-error e1 ...) émet un message d'erreur
@@ -47,10 +48,10 @@
         #f))
   ;; corps de fetch-index
   (cond
-   ((mpair? xs) (fetch mcar mcdr mpair? xs 0))
-   ((pair? xs) (fetch car cdr pair? xs 0))
-   ;; sinon
-   (else #f)))
+    ((mpair? xs) (fetch mcar mcdr mpair? xs 0))
+    ((pair? xs) (fetch car cdr pair? xs 0))
+    ;; sinon
+    (else #f)))
 
 ;;;;; Utilitaires de chemin
 
@@ -99,3 +100,17 @@
 (define (append-all ls)
   (if (null? ls) (list)
       (append (car ls) (append-all (cdr ls)))))
+
+
+(define (str . args)
+  (if (pair? args)
+      (if (pair? (cdr args))
+          (string-append (str (car args)) (apply str (cdr args)))
+          (let ((v (car args)))
+            (cond ((char? v) (string v))
+                  ((number? v) (number->string v))
+                  ((string? v) v)
+                  (else (let ((outstr (open-output-string)))
+                          (write v outstr)
+                          (get-output-string outstr))))))
+      ""))
