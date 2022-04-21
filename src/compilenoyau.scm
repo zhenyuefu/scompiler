@@ -205,10 +205,15 @@
       (list 'cons (list 'quote (car L)) (construct (cdr L)))
       (quote (list))))
 
+;;; '(x1 x2 x3 x4)
+;;; (list 'x1 'x2 'x3 'x4)
+;;; (cons 'x1 (cons 'x2 (cons 'x3 (cons 'x4 (list)))))
+
 ;;; compile-quote: 
 ;;;   PrimEnv * GlobEnv * LexEnv * KExpr -> LIST[BCInstr]
 (define (compile-quote prims genv env expr)
   (cond
+   ((symbol? (cadr expr)) (list (BC-PUSH (BC-symbol (cadr expr)))))
    ((atom? (cadr expr))
     (compile-atom prims genv env (cadr expr)))
    ((pair? (cadr expr))

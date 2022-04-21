@@ -189,11 +189,22 @@
     (for-each (lambda (instr) (display-instr instr file)) asmcode)
     (close-output-port file)))
 
+(define (output-symtable file symtable)
+  (if (pair? symtable)
+      (begin
+        (display " " file)
+        (display (caar symtable) file)
+        (output-symtable file (cdr symtable)))
+      #f))
+
 (define (save-bc-file fname bytecode)
   (let ((file (open-output-file fname))
         (symtable (car bytecode))
         (bytecode (cadr bytecode)))
     (display 424242 file) ;; magic
+    (display " " file)
+    (display (length symtable) file)
+    (output-symtable file symtable)
     (display " " file)
     (display (length bytecode) file) ;; longueur du bytecode
     (display " " file)

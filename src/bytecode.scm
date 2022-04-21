@@ -21,6 +21,7 @@
                      (FUN     3)
                      (BOOL    4)
                      (PAIR    5)
+                     (SYMBOL  6)
                      (CHAR    7)
                      (STRING  8)
                      (PORT    9)))
@@ -46,7 +47,8 @@
 ; ('BOOL <bool>) valeur booléenne
 ; ('UNIT) non valeur
 ; ('FUN <symbol>) valeur fonctionnelle (étiquette du code)
-; ('PRIM <num>) primitives (son numéro) 
+; ('PRIM <num>) primitives (son numéro)
+; ('SYMBOL <symbole>) symbole
 
 ;;;; Constructeurs
 ;;; BC-int : Int -> BCValue
@@ -73,6 +75,10 @@
 (define (BC-char c)
   (list 'CHAR c))
 
+;;; BC-symbol : Symbol -> BCValue
+(define (BC-symbol s)
+  (list 'SYMBOL s))
+
 ;;;; Reconnaisseurs
 ;;; BC-int? : BCValue -> Bool
 (define (BC-int? bcval)
@@ -98,6 +104,10 @@
 (define (BC-char? bcval)
   (eq? (car bcval) 'CHAR))
 
+;;; BC-symbol? : BCValue -> Bool
+(define (BC-symbol? bcval)/
+  (eq? (car bcval) 'SYMBOL))
+
 ;;;; Accesseurs
 ;;; BC-int-val : BCValue -> Int
 (define (BC-int-val bcval)
@@ -117,6 +127,10 @@
 
 ;;; BC-char-val : BCValue -> Char
 (define (BC-char-val bcval)
+  (cadr bcval))
+
+;;; BC-symbol-val : BCValue -> Char
+(define (BC-symbol-val bcval)
   (cadr bcval))
 
 ;;;;; JEU D'INSTRUCTIONS

@@ -47,12 +47,23 @@
     (index instrs 0)))
 
 ;;;; Symbol table
-; type SymbolTable = LIST[Symbol]
+; type SymbolTable = LIST[Symbol Integer]
 
 ;;; build-symbol-table: LIST[BCInstr] -> SymbolTable
 ;;; (build-symbol-table bc) collects the symbols appearing in bc
 (define (build-symbol-table instrs)
-  '()) ;; TODO
+  (define (aux instrs table n)
+    (if (pair? instrs)
+        (if (and (BC-PUSH? (car instrs))
+                 (BC-symbol? (BC-PUSH-value (car instrs))))
+            (let ((s (BC-symbol-val (BC-PUSH-value (car instrs)))))
+              (if (assq s table) (aux (cdr instrs) table n)
+                  (aux (cdr instrs) (cons (list s n) table) (+ n 1)))
+              )
+            (aux (cdr instrs) table n))
+        table)
+    )
+  (reverse (aux instrs '() 0)))
 
 ;;;; Serialization
 
@@ -77,6 +88,8 @@
      (char->integer (BC-char-val v)))
     ((BC-fun? v)
      (get-label-index (BC-fun-label v) labels))
+    ((BC-symbol? v)
+     (cadr (assq (BC-symbol-val v) symtable)))
 	(else (cadr v))))
 
 ;;; serialize-value: BCValue * LIST[Symbol] * SymbolTable -> LIST[Int]
